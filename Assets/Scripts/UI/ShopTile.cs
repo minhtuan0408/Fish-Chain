@@ -14,7 +14,6 @@ public class ShopTile : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        print (gameObject.name);
         ShopManager.Instance.Buy(this);
     }
     public void SetModel(ShopItem model)

@@ -72,11 +72,11 @@ public static class UserAPI
     {
         string url = ApiRoutes.GetInfo(username);
 
-        UserInfoRequest InfoData = new UserInfoRequest
-        {
-            UserName = username
-        };
-        string json = JsonUtility.ToJson(InfoData);
+        //UserInfoRequest InfoData = new UserInfoRequest
+        //{
+        //    UserName = username
+        //};
+        //string json = JsonUtility.ToJson(InfoData);
         yield return ApiClient.Get(url, (result) =>
         {
             if (!string.IsNullOrEmpty(result))
@@ -94,4 +94,33 @@ public static class UserAPI
             }
         }); 
     }
+
+    public static IEnumerator UpdateUserMoney(int id, int money, System.Action<BaseResponse> onResponse)
+    {
+        string url = ApiRoutes.UpdateUserMoney(id, money);
+        UserMoney userMoney = new UserMoney
+        {
+            id = id,
+            money = money
+        };
+        string json = JsonUtility.ToJson(userMoney);
+        yield return ApiClient.Put(url, json, (result) =>
+        {
+            if (!string.IsNullOrEmpty(result))
+            {
+                BaseResponse response = JsonUtility.FromJson<BaseResponse>(result);
+                onResponse?.Invoke(response);
+            }
+            else
+            {
+                BaseResponse response = new BaseResponse
+                {
+                    success = false
+                };
+                onResponse?.Invoke(response);
+            }
+        });
+        yield return 0;
+    }
+
 }

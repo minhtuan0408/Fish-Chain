@@ -20,6 +20,27 @@ public static class ApiClient
 
         callback?.Invoke(request.downloadHandler.text);             // ⑦ Trả kết quả response qua callback
     }
+    public static IEnumerator Put(string url, string json, System.Action<string> callback)
+    {
+        UnityWebRequest request = new UnityWebRequest(url, "PUT");
+
+        byte[] body = Encoding.UTF8.GetBytes(json);
+        request.uploadHandler = new UploadHandlerRaw(body);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.ConnectionError ||
+            request.result == UnityWebRequest.Result.ProtocolError)
+        {
+            callback?.Invoke(null);
+        }
+        else
+        {
+            callback?.Invoke(request.downloadHandler.text);
+        }
+    }
     public static IEnumerator Get(string url, System.Action<string> callback)
     {
         using (UnityWebRequest request = UnityWebRequest.Get(url))
@@ -39,4 +60,27 @@ public static class ApiClient
             }
         }
     }
+    public static IEnumerator Delete(string url, System.Action<string> callback)
+    {
+        using (UnityWebRequest request = UnityWebRequest.Delete(url))
+        {
+            request.downloadHandler = new DownloadHandlerBuffer(); /// check lại tác dụng hàm này
+            request.SetRequestHeader("Content-Type", "application/json");
+
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.ConnectionError ||
+                request.result == UnityWebRequest.Result.ProtocolError)
+            {
+                Debug.Log("Xoá không được");
+                callback?.Invoke(null);
+            }
+            else
+            {
+                callback?.Invoke(request.downloadHandler.text);
+            }
+        }
+    }
+
+
 }

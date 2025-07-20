@@ -16,9 +16,12 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private InfomationPanel infomationPanel;
     [SerializeField] private ShopPanel shopPanel;
+    [SerializeField] private AccountUI accountUI;
     public static InfomationPanel InfomationPanel => Instance.infomationPanel;
     public static ShopPanel ShopPanel => Instance.shopPanel;
+    public static AccountUI AccountUI => Instance.accountUI;
 
+    public static FishInfo fishInfo;
     private UIPanelType currentPanel = UIPanelType.None;
     private void Awake()
     {

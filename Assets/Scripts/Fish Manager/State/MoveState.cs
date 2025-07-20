@@ -10,7 +10,7 @@ public class MoveState : State
     {
         base.Enter();
         target = GetRandomDestination();
-        Debug.Log("Move");
+        //Debug.Log("Move");
         Direction();
     }
     public override void Update()

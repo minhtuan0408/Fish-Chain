@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
 
 public class AuthManager : MonoBehaviour
 {
@@ -53,7 +54,7 @@ public class AuthManager : MonoBehaviour
             if (response.success)
             {
                 string json = JsonUtility.ToJson(response);
-                Debug.Log($"{json}");
+                //Debug.Log($"{json}");
 
                 JsonInfo?.Invoke(json, response);
             }
@@ -63,6 +64,60 @@ public class AuthManager : MonoBehaviour
 
                 JsonInfo?.Invoke(null, response);
             }
+        }));
+    }
+
+    public void TryGetUserFishList(int userID, System.Action<string, UserFishListResponse> JsonUserFishList)
+    {
+        StartCoroutine(FishAPI.GetUserFish(userID, (response) =>
+        {
+            if (response.success)
+            {
+                string json = JsonUtility.ToJson(response);
+
+                // ✅ Gọi callback sau khi load thành công
+                JsonUserFishList?.Invoke(json, response);
+            }
+            else
+            {
+                Debug.LogWarning(response.message);
+                JsonUserFishList?.Invoke(null, response);
+            }
+        }));
+    }
+
+    public void TryAddNewFish(string fishName, int userID, int level, System.Action<AddFishResponse> onResponese)
+    {
+        StartCoroutine(FishAPI.AddNewFish(fishName, userID, level, (response) => {
+            if (!response.success)
+            {
+                Debug.Log("Lỗi tryaddnewfish");
+            }
+            onResponese?.Invoke(response);
+        }));
+    }
+
+    public void TryDeleteFish(int fishID, System.Action<BaseResponse> onResponese)
+    {
+        StartCoroutine(FishAPI.DeleteFish(fishID, (res) =>
+        {
+            if (res == null)
+            {
+                Debug.LogWarning("Không nhận được phản hồi, try ..");
+            }
+            onResponese?.Invoke(res); // Gọi callback dù thành công hay thất bại
+        }));
+    }
+
+    public void TryUpdateUserMoney(int ID, int money,System.Action<BaseResponse> onResponese)
+    {
+        StartCoroutine(UserAPI.UpdateUserMoney(ID,money, (res) =>
+        {
+            if (res == null)
+            {
+                Debug.LogWarning("Không nhận được phản hồi, try ..");
+            }
+            onResponese?.Invoke(res); // Gọi callback dù thành công hay thất bại
         }));
     }
 }

@@ -15,7 +15,6 @@ public class HungryState : State
     public override void Enter()
     {
         base.Enter();
-        Debug.Log("Đói");
         fish.StartCoroutine(MoveToFood());
         
     }

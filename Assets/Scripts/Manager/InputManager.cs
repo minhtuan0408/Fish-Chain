@@ -20,7 +20,7 @@ public class InputManager : MonoBehaviour
                 Fish fish = hit.collider.GetComponent<Fish>();
                 if (fish != null)
                 {
-                    fish.Info.ShowInfo();
+                    UIManager.fishInfo = fish.Info.ShowInfo();
                 }
             }
             else

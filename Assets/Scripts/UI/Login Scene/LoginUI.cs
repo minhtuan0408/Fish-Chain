@@ -23,7 +23,7 @@ public class LoginUI : MonoBehaviour
         {
             if (success)
             {
-                AccountManager.Instance.LogIn(username);
+                AccountManager.Instance.LoadInfo(username);
             }
             else
             {
